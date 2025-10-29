@@ -5,3 +5,4 @@ lightgbm>=3.3
 xgboost>=1.7
 tqdm>=4.60
 pyarrow>=5.0
+scikit-learn>=1.0

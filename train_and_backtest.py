@@ -3,11 +3,15 @@ Train multiple models on factor data and perform a simple backtest.
 
 This script bridges the outputs of the factor discovery pipeline and the
 model evaluation stage.  Given a feature matrix and corresponding
-returns, it trains a selected algorithm (LightGBM, XGBoost or GNN),
-generates out ‑of‑sample predictions and then constructs a daily long
-portfolio by selecting stocks with the highest predicted returns.  The
-portfolio performance is summarised with cumulative returns, annualised
-return, Sharpe ratio and maximum drawdown.
+returns, it trains a selected algorithm (LightGBM, XGBoost, GNN or other
+classical models) to generate out‑of‑sample predictions and then
+constructs a daily long portfolio by selecting stocks with the highest
+predicted returns.  Supported algorithms include gradient boosting
+models (LightGBM, XGBoost), a graph convolutional network (GNN), and
+classical machine learning models (Random Forest, Ridge Regression and
+Support Vector Regression).  The portfolio performance is summarised
+with cumulative returns, annualised return, Sharpe ratio and maximum
+drawdown.
 
 Usage:
     python train_and_backtest.py \
@@ -59,9 +63,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--valid_end", type=str, required=True, help="Validation end date (YYYY-MM-DD).")
     parser.add_argument("--test_start", type=str, required=True, help="Test start date (YYYY-MM-DD).")
     parser.add_argument("--test_end", type=str, required=True, help="Test end date (YYYY-MM-DD).")
-    parser.add_argument("--algorithm", type=str, default="lightgbm",
-                        choices=["lightgbm", "xgboost", "gnn"],
-                        help="Regression algorithm to use.")
+    parser.add_argument(
+        "--algorithm",
+        type=str,
+        default="lightgbm",
+        choices=[
+            "lightgbm",
+            "xgboost",
+            "gnn",
+            "random_forest",
+            "ridge",
+            "svr",
+            "elastic_net",
+            "lasso",
+            "mlp",
+        ],
+        help=(
+            "Regression algorithm to use. Supported values: lightgbm, xgboost, gnn, "
+            "random_forest, ridge, svr, elastic_net, lasso, mlp."
+        ),
+    )
     parser.add_argument("--topk", type=int, default=10, help="Number of top stocks to hold each day in the backtest.")
     return parser.parse_args()
 
